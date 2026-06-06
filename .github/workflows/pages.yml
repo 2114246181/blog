@@ -27,6 +27,11 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Debug info
+        run: |
+          node --version
+          npm --version
+
       - name: Install dependencies
         run: npm ci
 
