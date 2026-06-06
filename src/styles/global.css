@@ -2,8 +2,6 @@
    Design System — "Ember & Tide"
    ═══════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap');
-
 :root {
   /* ═══ Color — Ember & Tide ═══ */
   --color-ember: #F59E0B;
