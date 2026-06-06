@@ -27,19 +27,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Debug astro
-        run: |
-          ls -la node_modules/.bin/astro || echo "No astro bin"
-          node -e "require('astro')" 2>&1 || echo "astro import failed"
+      - run: npx astro build 2>&1
 
-      - name: Build
-        run: npx --no-install astro build 2>&1
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
@@ -50,6 +42,4 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
