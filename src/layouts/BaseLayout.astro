@@ -1,5 +1,5 @@
 ---
-
+import '../styles/global.css';
 
 export interface Props {
   title: string;
@@ -42,13 +42,11 @@ const { title, description = '理想 ⚡ — 一个理想主义者的技术实�
     <!-- GSAP Init -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        // Wait for GSAP
         const waitForGSAP = setInterval(() => {
           if (typeof gsap !== 'undefined') {
             clearInterval(waitForGSAP);
             gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
-            // Ambient orb floating
             gsap.to('#orbEmber', {
               x: () => Math.random() * 60 - 30,
               y: () => Math.random() * 60 - 30,
@@ -67,7 +65,6 @@ const { title, description = '理想 ⚡ — 一个理想主义者的技术实�
               ease: 'sine.inOut',
             });
 
-            // Global section reveals
             gsap.utils.toArray('.reveal').forEach((el) => {
               gsap.from(el, {
                 y: 40,
