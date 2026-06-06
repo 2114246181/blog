@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter(p => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const allTags = [...new Set(posts.flatMap(p => p.data.tags))];
+---
+
+<BaseLayout title="文章">
+  <Fragment slot="header"><Header /></Fragment>
+  <Fragment slot="footer"><Footer /></Fragment>
+
+  <section class="page-header container">
+    <h1 class="page-header__title">文章</h1>
+    <p class="page-header__desc">共 {posts.length} 篇</p>
+  </section>
+
+  {allTags.length > 1 && (
+    <div class="tags-bar container">
+      <button class="tag tag--active" data-tag="all">全部</button>
+      {allTags.map(tag => (
+        <button class="tag" data-tag={tag}>{tag}</button>
+      ))}
+    </div>
+  )}
+
+  <section class="container">
+    <div class="post-grid" id="blogGrid">
+      {posts.length > 0 ? (
+        posts.map(post => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            tags={post.data.tags}
+            slug={post.slug}
+            featured={post.data.featured}
+          />
+        ))
+      ) : (
+        <p class="empty-text">暂无文章</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    padding: var(--space-8) 0 var(--space-6);
+    text-align: center;
+  }
+
+  .page-header__title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin-bottom: var(--space-2);
+  }
+
+  .page-header__desc {
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+
+  .tags-bar {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .tag--active {
+    background: var(--color-primary);
+    color: var(--text-inverse);
+    border-color: var(--color-primary);
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-5);
+    padding-bottom: var(--space-10);
+  }
+
+  .empty-text {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-tertiary);
+    padding: var(--space-10);
+  }
+
+  @media (max-width: 768px) {
+    .post-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Filter by tag
+    document.querySelectorAll('.tags-bar .tag').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tags-bar .tag').forEach(b => b.classList.remove('tag--active'));
+        btn.classList.add('tag--active');
+        const tag = btn.dataset.tag;
+        document.querySelectorAll('#blogGrid .card').forEach(card => {
+          if (tag === 'all') {
+            card.style.display = '';
+          } else {
+            const tags = card.querySelector('.card__tags');
+            const hasTag = tags && Array.from(tags.querySelectorAll('.tag')).some(t => t.textContent === tag);
+            card.style.display = hasTag ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    // Entry animation
+    gsap.from('.card', {
+      y: 30, opacity: 0, duration: 0.6, ease: 'back.out(1.4)',
+      stagger: 0.06,
+      scrollTrigger: { trigger: '#blogGrid', start: 'top 80%' }
+    });
+  });
+</script>

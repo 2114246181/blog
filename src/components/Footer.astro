@@ -1,0 +1,103 @@
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="footer__logo gradient-text">理想 ⚡</span>
+      <p class="footer__tagline">技术分享 · 成长记录</p>
+    </div>
+
+    <div class="footer__links">
+      <div class="footer__col">
+        <h4 class="footer__col-title">导航</h4>
+        <a href="/blog/" class="footer__link">首页</a>
+        <a href="/blog/blog/" class="footer__link">文章</a>
+        <a href="/blog/about/" class="footer__link">关于</a>
+      </div>
+      <div class="footer__col">
+        <h4 class="footer__col-title">社交</h4>
+        <a href="https://github.com/2114246181" target="_blank" class="footer__link">GitHub</a>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>© {new Date().getFullYear()} 理想 · Powered by Astro</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border-color);
+    padding: var(--space-10) 0 var(--space-6);
+    margin-top: var(--space-12);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-10);
+  }
+
+  .footer__logo {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  .footer__tagline {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    margin-top: var(--space-2);
+  }
+
+  .footer__links {
+    display: flex;
+    gap: var(--space-10);
+  }
+
+  .footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__col-title {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-1);
+  }
+
+  .footer__link {
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer__link:hover {
+    color: var(--color-primary);
+  }
+
+  .footer__bottom {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    .footer__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .footer__links {
+      gap: var(--space-8);
+    }
+  }
+</style>

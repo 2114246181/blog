@@ -1,0 +1,26 @@
+<div class="progress-bar" id="readingProgress"></div>
+
+<style>
+  .progress-bar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    height: 2px;
+    background: var(--accent-gradient);
+    z-index: 99;
+    width: 0;
+    transition: width 0.1s linear;
+  }
+</style>
+
+<script>
+  const bar = document.getElementById('readingProgress');
+  if (bar) {
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = progress + '%';
+    });
+  }
+</script>

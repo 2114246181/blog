@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="关于">
+  <Fragment slot="header"><Header /></Fragment>
+  <Fragment slot="footer"><Footer /></Fragment>
+
+  <section class="about container container-narrow">
+    <h1 class="about__title">关于我</h1>
+    <div class="about__hero">
+      <div class="about__avatar">
+        <span class="about__emoji">⚡</span>
+      </div>
+      <div class="about__info">
+        <h2 class="about__name gradient-text">理想</h2>
+        <p class="about__role">开发者 / 终身学习者</p>
+      </div>
+    </div>
+
+    <div class="about__content">
+      <p>你好，我是理想，一名热爱技术的开发者。</p>
+      <p>这个博客是我记录技术思考、项目经验和个人成长的地方。我相信最好的学习方式就是把知识写下来，分享出去。</p>
+    </div>
+
+    <div class="about__stack">
+      <h2>技术栈</h2>
+      <div class="about__tags">
+        <span class="tag">TypeScript</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Vue</span>
+        <span class="tag">React</span>
+        <span class="tag">Python</span>
+        <span class="tag">Docker</span>
+        <span class="tag">Git</span>
+        <span class="tag">LLM</span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about {
+    padding: var(--space-10) 0;
+  }
+
+  .about__title {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .about__hero {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+    padding: var(--space-6);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+  }
+
+  .about__avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .about__emoji {
+    filter: grayscale(1) brightness(10);
+  }
+
+  .about__name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+  }
+
+  .about__role {
+    color: var(--text-secondary);
+    margin-top: var(--space-1);
+    font-size: 1rem;
+  }
+
+  .about__content {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: var(--space-8);
+  }
+
+  .about__stack h2 {
+    font-size: 1.2rem;
+    margin-bottom: var(--space-4);
+  }
+
+  .about__tags {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+</style>

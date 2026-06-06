@@ -1,0 +1,267 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter(p => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const featured = posts.filter(p => p.data.featured);
+const recent = posts.slice(0, 4);
+---
+
+<BaseLayout title="首页">
+  <Fragment slot="header"><Header /></Fragment>
+  <Fragment slot="footer"><Footer /></Fragment>
+
+  <!-- Hero -->
+  <section class="hero container">
+    <div class="hero__content">
+      <p class="hero__pretitle gradient-text" id="heroPre">⚡ 技术博客</p>
+      <h1 class="hero__title" id="heroTitle">记录成长，<br/>分享<a class="hero__code">&lt;代码 /&gt;</a></h1>
+      <p class="hero__subtitle" id="heroSub">用文字沉淀思考，用技术创造价值</p>
+      <div class="hero__actions" id="heroActions">
+        <a href="/blog/blog/" class="btn btn--primary">浏览文章</a>
+        <a href="/blog/about/" class="btn btn--ghost">关于我</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container" id="featuredSection">
+    <h2 class="section-title">
+      <span class="section-title__text">最新文章</span>
+      <span class="section-title__line"></span>
+    </h2>
+    <div class="post-grid">
+      {recent.length > 0 ? (
+        recent.map(post => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            tags={post.data.tags}
+            slug={post.slug}
+            featured={post.data.featured}
+          />
+        ))
+      ) : (
+        <p class="empty-text">还没有文章，先去看看关于页面吧</p>
+      )}
+    </div>
+    <div class="hero__actions" style="text-align:center;margin-top:var(--space-8)">
+      <a href="/blog/blog/" class="btn btn--ghost">查看全部文章 →</a>
+    </div>
+  </section>
+
+  <!-- Tech Stack Showcase -->
+  <section class="tech-strip container" id="techStrip">
+    <p class="tech-strip__label">Stack</p>
+    <div class="tech-strip__items">
+      <span>Astro 6</span>
+      <span>GSAP</span>
+      <span>TypeScript</span>
+      <span>GitHub Pages</span>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    padding: var(--space-10) 0;
+  }
+
+  .hero__content {
+    max-width: 720px;
+  }
+
+  .hero__pretitle {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: var(--space-4);
+    letter-spacing: 0.05em;
+  }
+
+  .hero__title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: var(--space-5);
+  }
+
+  .hero__code {
+    color: var(--color-primary);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.9em;
+  }
+
+  .hero__subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-8);
+    line-height: 1.6;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 12px 28px;
+    font-family: var(--font-display);
+    font-size: 0.92rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    cursor: pointer;
+  }
+
+  .btn--primary {
+    background: var(--accent-gradient);
+    color: var(--text-inverse);
+    border: none;
+  }
+
+  .btn--primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+  }
+
+  .btn--ghost:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(0, 212, 255, 0.05);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    font-family: var(--font-display);
+  }
+
+  .section-title__text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .section-title__line {
+    flex: 1;
+    height: 1px;
+    background: var(--accent-gradient);
+    opacity: 0.3;
+  }
+
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .empty-text {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-tertiary);
+    padding: var(--space-10);
+  }
+
+  .tech-strip {
+    margin-top: var(--space-12);
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .tech-strip__label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tech-strip__items {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .tech-strip__items span {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    padding: 4px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .post-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .hero {
+      min-height: auto;
+      padding: var(--space-8) 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.7 } });
+    tl.from('#heroPre', { y: 30, opacity: 0, duration: 0.8 })
+      .from('#heroTitle', { y: 40, opacity: 0, duration: 1, ease: 'power4.out' }, '-=0.3')
+      .from('#heroSub', { y: 20, opacity: 0 }, '-=0.4')
+      .from('#heroActions', { y: 20, opacity: 0 }, '-=0.2')
+      .from('.section-title', { y: 20, opacity: 0, stagger: 0.1, duration: 0.6 }, '-=0.1');
+
+    // Stagger cards
+    gsap.from('.card', {
+      y: 40, opacity: 0, duration: 0.7, ease: 'back.out(1.4)',
+      stagger: 0.08,
+      scrollTrigger: {
+        trigger: '#featuredSection',
+        start: 'top 80%',
+        toggleActions: 'play none none none',
+      }
+    });
+
+    // Typewriter effect on hero code
+    const codeEl = document.querySelector('.hero__code');
+    if (codeEl) {
+      const text = '<代码 />';
+      codeEl.textContent = '';
+      const obj = { i: 0 };
+      gsap.to(obj, {
+        i: text.length, duration: 2, ease: 'none', delay: 1,
+        onUpdate: () => { codeEl.textContent = text.slice(0, Math.floor(obj.i)); },
+      });
+    }
+  });
+</script>
