@@ -27,16 +27,16 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Debug info
-        run: |
-          node --version
-          npm --version
-
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug astro
+        run: |
+          ls -la node_modules/.bin/astro || echo "No astro bin"
+          node -e "require('astro')" 2>&1 || echo "astro import failed"
+
       - name: Build
-        run: npm run build
+        run: npx --no-install astro build 2>&1
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
