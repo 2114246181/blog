@@ -374,6 +374,7 @@ const recent = posts.slice(0, 6);
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
+  clearTimeout(window._g);
 
   document.addEventListener('DOMContentLoaded', () => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });

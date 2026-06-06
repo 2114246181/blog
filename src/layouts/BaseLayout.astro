@@ -13,6 +13,7 @@ const { title, description = '理想 ⚡ — 一个理想主义者的技术实�
 <html lang="zh-CN" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
+    <script>window._g=setTimeout(function(){document.documentElement.classList.add('gsap-fail')},500);document.documentElement.classList.add('js')</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="dark light" />
@@ -42,6 +43,8 @@ const { title, description = '理想 ⚡ — 一个理想主义者的技术实�
       import { ScrollTrigger } from 'gsap/ScrollTrigger';
       import { TextPlugin } from 'gsap/TextPlugin';
       gsap.registerPlugin(ScrollTrigger, TextPlugin);
+      // GSAP 已加载，取消 fallback
+      clearTimeout(window._g);
 
       document.addEventListener('DOMContentLoaded', () => {
         gsap.to('#orbEmber', {

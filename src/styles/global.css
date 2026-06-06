@@ -289,16 +289,33 @@ blockquote {
    Section Reveal
    ═══════════════════════════════════════ */
 
-/* 
-  GSAP ScrollTrigger 接管动画，不设初始 opacity: 0
-  GSAP的 .from() 会通过内联样式设置初始状态
-  如果 GSAP 加载失败，内容默认可见
-*/
-.reveal,
-.reveal-left,
-.reveal-right,
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
 .reveal-scale {
-  /* 初始状态无变化，GSAP 通过内联样式管理 */
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* GSAP 未加载时 500ms 后强制显示 */
+.js.gsap-fail .reveal,
+.js.gsap-fail .reveal-left,
+.js.gsap-fail .reveal-right,
+.js.gsap-fail .reveal-scale {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* ═══════════════════════════════════════
