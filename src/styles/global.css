@@ -289,24 +289,33 @@ blockquote {
    Section Reveal
    ═══════════════════════════════════════ */
 
-.reveal {
+.js .reveal {
   opacity: 0;
   transform: translateY(40px);
 }
 
-.reveal-left {
+.js .reveal-left {
   opacity: 0;
   transform: translateX(-40px);
 }
 
-.reveal-right {
+.js .reveal-right {
   opacity: 0;
   transform: translateX(40px);
 }
 
-.reveal-scale {
+.js .reveal-scale {
   opacity: 0;
   transform: scale(0.95);
+}
+
+/* GSAP 加载失败时的兜底：3秒后强制显示 */
+.js.revealed .reveal,
+.js.revealed .reveal-left,
+.js.revealed .reveal-right,
+.js.revealed .reveal-scale {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* ═══════════════════════════════════════
