@@ -371,68 +371,66 @@ const recent = posts.slice(0, 6);
 </style>
 
 <script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
   document.addEventListener('DOMContentLoaded', () => {
-    const waitForGSAP = setInterval(() => {
-      if (typeof gsap !== 'undefined') {
-        clearInterval(waitForGSAP);
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.from('#heroMono', { scale: 0.6, opacity: 0, duration: 1.2, ease: 'elastic.out(1, 0.5)' })
+      .from('#heroBoltWrap', { scale: 0, opacity: 0, duration: 0.6, ease: 'back.out(2)' }, '-=0.4')
+      .from('#heroRight', { y: 40, opacity: 0, duration: 0.8 }, '-=0.6')
+      .from('#heroActions', { y: 20, opacity: 0, duration: 0.5 }, '-=0.3')
+      .from('#heroScroll', { y: 10, opacity: 0, duration: 0.5 }, '-=0.2');
 
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        tl.from('#heroMono', { scale: 0.6, opacity: 0, duration: 1.2, ease: 'elastic.out(1, 0.5)' })
-          .from('#heroBoltWrap', { scale: 0, opacity: 0, duration: 0.6, ease: 'back.out(2)' }, '-=0.4')
-          .from('#heroRight', { y: 40, opacity: 0, duration: 0.8 }, '-=0.6')
-          .from('#heroActions', { y: 20, opacity: 0, duration: 0.5 }, '-=0.3')
-          .from('#heroScroll', { y: 10, opacity: 0, duration: 0.5 }, '-=0.2');
+    // Typewriter
+    const phrases = [
+      '在代码与生活之间，寻找更好的答案',
+      '写有温度的代码，做有态度的人',
+      '技术 · 创造 · 生活 · 理想',
+      '一个理想主义者的技术实践',
+    ];
 
-        // Typewriter
-        const phrases = [
-          '在代码与生活之间，寻找更好的答案',
-          '写有温度的代码，做有态度的人',
-          '技术 · 创造 · 生活 · 理想',
-          '一个理想主义者的技术实践',
-        ];
+    let phraseIndex = 0, charIndex = 0, isDeleting = false;
+    const twEl = document.querySelector('.hero__typewriter');
 
-        let phraseIndex = 0, charIndex = 0, isDeleting = false;
-        const twEl = document.querySelector('.hero__typewriter');
-
-        if (twEl) {
-          function typeEffect() {
-            const current = phrases[phraseIndex];
-            if (!isDeleting) {
-              charIndex++;
-              twEl.innerHTML = current.substring(0, charIndex) + '<span class="hero__cursor">|</span>';
-              if (charIndex === current.length) { isDeleting = true; setTimeout(typeEffect, 2000); return; }
-              setTimeout(typeEffect, 50 + Math.random() * 40);
-            } else {
-              charIndex--;
-              twEl.innerHTML = current.substring(0, charIndex) + '<span class="hero__cursor">|</span>';
-              if (charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; setTimeout(typeEffect, 300); return; }
-              setTimeout(typeEffect, 20 + Math.random() * 20);
-            }
-          }
-          setTimeout(typeEffect, 1200);
+    if (twEl) {
+      function typeEffect() {
+        const current = phrases[phraseIndex];
+        if (!isDeleting) {
+          charIndex++;
+          twEl.innerHTML = current.substring(0, charIndex) + '<span class="hero__cursor">|</span>';
+          if (charIndex === current.length) { isDeleting = true; setTimeout(typeEffect, 2000); return; }
+          setTimeout(typeEffect, 50 + Math.random() * 40);
+        } else {
+          charIndex--;
+          twEl.innerHTML = current.substring(0, charIndex) + '<span class="hero__cursor">|</span>';
+          if (charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; setTimeout(typeEffect, 300); return; }
+          setTimeout(typeEffect, 20 + Math.random() * 20);
         }
-
-        // Card tilt
-        document.querySelectorAll('.card').forEach(card => {
-          card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left, y = e.clientY - rect.top;
-            const cx = rect.width / 2, cy = rect.height / 2;
-            card.style.transform = `perspective(800px) rotateX(${(y-cy)/cy*-6}deg) rotateY(${(x-cx)/cx*6}deg) translateY(-3px)`;
-          });
-          card.addEventListener('mouseleave', () => { card.style.transform = ''; });
-        });
-
-        // Scroll reveals
-        gsap.utils.toArray('.post-grid__item').forEach((el, i) => {
-          gsap.from(el, { y: 40, opacity: 0, duration: 0.6, delay: i * 0.08, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
-        });
-        gsap.utils.toArray('.post-grid__featured').forEach((el) => {
-          gsap.from(el, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
-        });
       }
-    }, 100);
+      setTimeout(typeEffect, 1200);
+    }
+
+    // Card tilt
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        const cx = rect.width / 2, cy = rect.height / 2;
+        card.style.transform = `perspective(800px) rotateX(${(y-cy)/cy*-6}deg) rotateY(${(x-cx)/cx*6}deg) translateY(-3px)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    });
+
+    // Scroll reveals
+    gsap.utils.toArray('.post-grid__item').forEach((el, i) => {
+      gsap.from(el, { y: 40, opacity: 0, duration: 0.6, delay: i * 0.08, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+    });
+    gsap.utils.toArray('.post-grid__featured').forEach((el) => {
+      gsap.from(el, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+    });
   });
 </script>
