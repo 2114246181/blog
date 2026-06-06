@@ -1,26 +1,35 @@
 ---
+import '../../styles/global.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
 import PostLayout from '../../layouts/PostLayout.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map(post => ({
-    params: { slug: post.id },
-    props: { post },
+  const blogPosts = await getCollection('blog');
+  return Promise.all(blogPosts.map(async (post) => {
+    const { Content } = await render(post);
+    return {
+      params: { slug: post.id.replace(/\.\w+$/, '') },
+      props: { Content, data: post.data },
+    };
   }));
 }
 
-const { post } = Astro.props;
-const { Content, headings } = await render(post);
-const { title, description, pubDate, tags } = post.data;
+const { Content, data } = Astro.props;
 ---
 
-<PostLayout
-  title={title}
-  description={description}
-  pubDate={pubDate}
-  tags={tags}
-  headings={headings}
->
-  <Content />
-</PostLayout>
+<BaseLayout title={data.title} description={data.description}>
+  <Fragment slot="header"><Header /></Fragment>
+  <Fragment slot="footer"><Footer /></Fragment>
+
+  <PostLayout
+    title={data.title}
+    description={data.description}
+    pubDate={data.pubDate}
+    tags={data.tags}
+  >
+    <Content />
+  </PostLayout>
+</BaseLayout>

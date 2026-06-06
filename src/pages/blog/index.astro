@@ -9,126 +9,141 @@ const posts = (await getCollection('blog'))
   .filter(p => !p.data.draft)
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
-const allTags = [...new Set(posts.flatMap(p => p.data.tags))];
+const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
 ---
 
 <BaseLayout title="文章">
   <Fragment slot="header"><Header /></Fragment>
   <Fragment slot="footer"><Footer /></Fragment>
 
-  <section class="page-header container">
-    <h1 class="page-header__title">文章</h1>
-    <p class="page-header__desc">共 {posts.length} 篇</p>
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-hero__title reveal">文章</h1>
+      <p class="page-hero__desc reveal">共 {posts.length} 篇</p>
+    </div>
   </section>
 
-  {allTags.length > 1 && (
-    <div class="tags-bar container">
-      <button class="tag tag--active" data-tag="all">全部</button>
-      {allTags.map(tag => (
-        <button class="tag" data-tag={tag}>{tag}</button>
-      ))}
-    </div>
-  )}
+  <section class="container blog-listing">
+    {allTags.length > 1 && (
+      <div class="tags-bar reveal" id="tagsBar">
+        <button class="tag tag--active" data-tag="all">全部</button>
+        {allTags.map(tag => (
+          <button class="tag tag--filter" data-tag={tag}>{tag}</button>
+        ))}
+      </div>
+    )}
 
-  <section class="container">
-    <div class="post-grid" id="blogGrid">
-      {posts.length > 0 ? (
-        posts.map(post => (
+    {posts.length === 0 ? (
+      <div class="empty-section">
+        <p>还没有文章</p>
+      </div>
+    ) : (
+      <div class="posts-grid reveal" id="postsGrid">
+        {posts.map((post, i) => (
           <BlogCard
             title={post.data.title}
             description={post.data.description}
             pubDate={post.data.pubDate}
             tags={post.data.tags}
-            slug={post.slug}
+            slug={post.id.replace(/\.\w+$/, '')}
             featured={post.data.featured}
+            index={i}
           />
-        ))
-      ) : (
-        <p class="empty-text">暂无文章</p>
-      )}
-    </div>
+        ))}
+      </div>
+    )}
   </section>
 </BaseLayout>
 
 <style>
-  .page-header {
-    padding: var(--space-8) 0 var(--space-6);
-    text-align: center;
+  .page-hero {
+    padding: 140px 0 var(--space-8);
+    position: relative;
+    z-index: 1;
   }
 
-  .page-header__title {
-    font-size: clamp(2rem, 4vw, 2.8rem);
-    margin-bottom: var(--space-2);
+  .page-hero__title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
   }
 
-  .page-header__desc {
+  .page-hero__desc {
     color: var(--text-tertiary);
     font-family: var(--font-mono);
     font-size: 0.9rem;
+    margin-top: var(--space-2);
+  }
+
+  .blog-listing {
+    padding-bottom: var(--space-16);
+    position: relative;
+    z-index: 1;
   }
 
   .tags-bar {
     display: flex;
-    gap: var(--space-2);
-    justify-content: center;
+    gap: var(--space-3);
     flex-wrap: wrap;
     margin-bottom: var(--space-8);
-    padding-bottom: var(--space-4);
-    border-bottom: 1px solid var(--border-color);
+  }
+
+  .tag {
+    cursor: pointer;
   }
 
   .tag--active {
-    background: var(--color-primary);
+    background: var(--color-ember);
     color: var(--text-inverse);
-    border-color: var(--color-primary);
+    border-color: var(--color-ember);
   }
 
-  .post-grid {
+  .posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: var(--space-5);
-    padding-bottom: var(--space-10);
   }
 
-  .empty-text {
-    grid-column: 1 / -1;
+  .empty-section {
     text-align: center;
-    color: var(--text-tertiary);
     padding: var(--space-10);
+    color: var(--text-tertiary);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius-lg);
   }
 
   @media (max-width: 768px) {
-    .post-grid {
-      grid-template-columns: 1fr;
-    }
+    .page-hero { padding-top: 100px; }
+    .posts-grid { grid-template-columns: 1fr; }
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // Filter by tag
-    document.querySelectorAll('.tags-bar .tag').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tags-bar .tag').forEach(b => b.classList.remove('tag--active'));
-        btn.classList.add('tag--active');
-        const tag = btn.dataset.tag;
-        document.querySelectorAll('#blogGrid .card').forEach(card => {
-          if (tag === 'all') {
-            card.style.display = '';
-          } else {
-            const tags = card.querySelector('.card__tags');
-            const hasTag = tags && Array.from(tags.querySelectorAll('.tag')).some(t => t.textContent === tag);
-            card.style.display = hasTag ? '' : 'none';
+    const tags = document.querySelectorAll('.tag--filter, .tag--active');
+    const posts = document.querySelectorAll('.card');
+    const activeTag = document.querySelector('.tag--active');
+
+    tags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        tags.forEach(t => t.classList.remove('tag--active'));
+        tag.classList.add('tag--active');
+
+        const selected = tag.dataset.tag;
+
+        posts.forEach(post => {
+          const postTags = post.querySelector('.card__tags');
+          if (!postTags) return;
+
+          if (selected === 'all') {
+            post.style.display = '';
+            return;
           }
+
+          const hasTag = [...postTags.querySelectorAll('.tag')]
+            .some(t => t.textContent.trim() === selected);
+
+          post.style.display = hasTag ? '' : 'none';
         });
       });
-    });
-
-    // Entry animation
-    gsap.from('.card', {
-      y: 30, opacity: 0, duration: 0.6, ease: 'back.out(1.4)',
-      stagger: 0.06,
-      scrollTrigger: { trigger: '#blogGrid', start: 'top 80%' }
     });
   });
 </script>

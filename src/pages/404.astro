@@ -1,11 +1,82 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 ---
 
 <BaseLayout title="页面未找到">
-  <section class="error container" style="text-align:center;padding:var(--space-12)0;">
-    <h1 class="gradient-text" style="font-size:4rem;">404</h1>
-    <p style="color:var(--text-secondary);margin:var(--space-4)0 var(--space-8);">页面不见了</p>
-    <a href="/blog/" class="btn btn--primary" style="display:inline-flex;">回首页</a>
+  <Fragment slot="header"><Header /></Fragment>
+  <Fragment slot="footer"><Footer /></Fragment>
+
+  <section class="notfound container">
+    <div class="notfound__inner">
+      <div class="notfound__code">404</div>
+      <h1 class="notfound__title">页面未找到</h1>
+      <p class="notfound__text">理想的世界里，这条路还没修好</p>
+      <a href="/blog/" class="btn btn--primary">返回首页</a>
+    </div>
   </section>
 </BaseLayout>
+
+<style>
+  .notfound {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .notfound__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .notfound__code {
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 15vw, 10rem);
+    font-weight: 800;
+    line-height: 1;
+    background: var(--color-ember-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.04em;
+  }
+
+  .notfound__title {
+    font-size: 1.8rem;
+  }
+
+  .notfound__text {
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 1rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 12px 28px;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all var(--transition-base);
+    background: var(--color-ember-gradient);
+    color: var(--text-inverse);
+    margin-top: var(--space-2);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-ember);
+    color: var(--text-inverse);
+  }
+</style>
