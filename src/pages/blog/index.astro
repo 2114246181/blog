@@ -91,9 +91,9 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
   }
 
   .tag--active {
-    background: var(--color-ember);
+    background: var(--accent);
     color: var(--text-inverse);
-    border-color: var(--color-ember);
+    border-color: var(--accent);
   }
 
   .posts-grid {
@@ -106,7 +106,7 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
     text-align: center;
     padding: var(--space-10);
     color: var(--text-tertiary);
-    border: 1px dashed var(--border-color);
+    border: 1px dashed var(--border);
     border-radius: var(--radius-lg);
   }
 

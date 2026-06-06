@@ -41,14 +41,12 @@ import Footer from '../components/Footer.astro';
     font-size: clamp(6rem, 15vw, 10rem);
     font-weight: 800;
     line-height: 1;
-    background: var(--color-ember-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent);
     letter-spacing: -0.04em;
   }
 
   .notfound__title {
+    font-family: var(--font-display);
     font-size: 1.8rem;
   }
 
@@ -56,27 +54,5 @@ import Footer from '../components/Footer.astro';
     color: var(--text-secondary);
     font-style: italic;
     font-size: 1rem;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: 12px 28px;
-    font-family: var(--font-display);
-    font-size: 0.9rem;
-    font-weight: 600;
-    border-radius: var(--radius-full);
-    text-decoration: none;
-    transition: all var(--transition-base);
-    background: var(--color-ember-gradient);
-    color: var(--text-inverse);
-    margin-top: var(--space-2);
-  }
-
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-ember);
-    color: var(--text-inverse);
   }
 </style>

@@ -13,22 +13,18 @@ const { title, description = '理想 ⚡ — 一个理想主义者的技术实�
 <html lang="zh-CN" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <script>window._g=setTimeout(function(){document.documentElement.classList.add('gsap-fail')},500);document.documentElement.classList.add('js')</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="dark light" />
-
     <title>{title} — 理想 ⚡</title>
-
     <link rel="icon" type="image/svg+xml" href="/blog/favicon.svg" />
-    <!-- GSAP -->
   </head>
   <body>
     <div class="ambient-bg">
-      <div class="ambient-orb ambient-orb--ember" id="orbEmber"></div>
-      <div class="ambient-orb ambient-orb--tide" id="orbTide"></div>
-      <div class="ambient-orb ambient-orb--flare"></div>
-      <div class="ambient-grid"></div>
+      <div class="ambient-glow ambient-glow--1"></div>
+      <div class="ambient-glow ambient-glow--2"></div>
+      <div class="ambient-glow ambient-glow--3"></div>
+      <div class="ambient-dots"></div>
     </div>
 
     <slot name="header" />
@@ -37,61 +33,22 @@ const { title, description = '理想 ⚡ — 一个理想主义者的技术实�
     </main>
     <slot name="footer" />
 
-    <!-- GSAP Init -->
     <script>
-      import { gsap } from 'gsap';
-      import { ScrollTrigger } from 'gsap/ScrollTrigger';
-      import { TextPlugin } from 'gsap/TextPlugin';
-      gsap.registerPlugin(ScrollTrigger, TextPlugin);
-      // GSAP 已加载，取消 fallback
-      clearTimeout(window._g);
-
+      // Scroll reveal via IntersectionObserver
       document.addEventListener('DOMContentLoaded', () => {
-        gsap.to('#orbEmber', {
-          x: () => Math.random() * 60 - 30,
-          y: () => Math.random() * 60 - 30,
-          duration: 8 + Math.random() * 4,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
+        const obs = new IntersectionObserver(
+          (entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+                obs.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        );
 
-        gsap.to('#orbTide', {
-          x: () => Math.random() * 60 - 30,
-          y: () => Math.random() * 60 - 30,
-          duration: 10 + Math.random() * 4,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
-
-        gsap.utils.toArray('.reveal').forEach((el) => {
-          gsap.from(el, {
-            y: 40,
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
-            },
-          });
-        });
-
-        gsap.utils.toArray('.reveal-scale').forEach((el) => {
-          gsap.from(el, {
-            scale: 0.92,
-            opacity: 0,
-            duration: 0.7,
-            ease: 'back.out(1.4)',
-            scrollTrigger: {
-              trigger: el,
-              start: 'top 80%',
-              toggleActions: 'play none none none',
-            },
-          });
-        });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
       });
     </script>
   </body>

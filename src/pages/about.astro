@@ -73,12 +73,12 @@ import Footer from '../components/Footer.astro';
   .about-avatar {
     font-size: 4rem;
     margin-bottom: var(--space-4);
-    animation: bolt-glow 3s ease-in-out infinite;
+    animation: about-glow 3s ease-in-out infinite;
   }
 
-  @keyframes bolt-glow {
-    0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px var(--color-ember)); }
-    50% { opacity: 1; filter: drop-shadow(0 0 16px var(--color-ember)); }
+  @keyframes about-glow {
+    0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px var(--accent)); }
+    50% { opacity: 1; filter: drop-shadow(0 0 16px var(--accent)); }
   }
 
   .about-name {
@@ -128,7 +128,7 @@ import Footer from '../components/Footer.astro';
     font-size: 0.82rem;
     padding: 4px 16px;
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
     border-radius: var(--radius-full);
     color: var(--text-secondary);
   }
